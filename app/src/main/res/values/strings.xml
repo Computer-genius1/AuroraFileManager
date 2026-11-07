@@ -43,7 +43,7 @@
     <string name="items_selected">%1$d selected</string>
     <string name="clear_search">Clear search</string>
     <string name="about_app">About &amp; Release Notes</string>
-    <string name="changelog_title">Release Notes (v1.0.3)</string>
+    <string name="changelog_title">Release Notes (v1.0.4)</string>
     <string name="check_for_updates">Check for Updates</string>
     <string name="update_available">Update Available</string>
     <string name="download_update">Download Update</string>
@@ -55,9 +55,10 @@
     <string name="default_untitled_folder">Untitled Folder</string>
     <string name="default_untitled_file">Untitled File.txt</string>
     <string name="update_complete_title">Update Complete!</string>
-    <string name="update_complete_subtitle">Welcome to Aurora 1.0.3. Here is what is new:</string>
-    <string name="btn_explore">Explore Version 1.0.3</string>
+    <string name="update_complete_subtitle">Welcome to Aurora 1.0.4. Here is what was fixed in this update:</string>
+    <string name="btn_explore">Explore Version 1.0.4</string>
     <string name="protected_android_folder_message">Protection: The Android system folder is vital and cannot be deleted.</string>
     <string name="changelog_samsung_fix">Fixes an issue that may block installation on certain Samsung devices.</string>
+    <string name="changelog_drawer_fix">Scrollable side navigation drawer for instant access to Check for Updates and About.</string>
     <string name="changelog_minor_fixes">Includes other minor bug fixes and improvements.</string>
 </resources>

@@ -83,48 +83,24 @@ fun UpdateCompleteScreen(
                 // What's New Feature Cards
                 FeatureHighlightCard(
                     icon = Icons.Default.Build,
-                    title = "Samsung Compatibility & Bug Fixes",
+                    title = "Samsung Installation Fix",
                     description = stringResource(R.string.changelog_samsung_fix)
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 FeatureHighlightCard(
-                    icon = Icons.Default.DarkMode,
-                    title = "System Dark Theme",
-                    description = "Automatically adapts to your system night settings so you are never blinded in the dark."
+                    icon = Icons.Default.Menu,
+                    title = "Scrollable Side Drawer",
+                    description = stringResource(R.string.changelog_drawer_fix)
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 FeatureHighlightCard(
-                    icon = Icons.Default.FolderZip,
-                    title = "Quick Access Folder Chips",
-                    description = "One-tap navigation bar for instant access to Documents, Downloads, Pictures, Videos, and Music."
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                FeatureHighlightCard(
-                    icon = Icons.Default.Edit,
-                    title = "Untitled Defaults & Blank Validation",
-                    description = "Pre-fills new files/folders with default titles and shows real-time red error validation if blank."
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                FeatureHighlightCard(
-                    icon = Icons.Default.Translate,
-                    title = "Full Spanish Support",
-                    description = "Complete Spanish localization for all app screens, menus, and onboarding dialogs."
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                FeatureHighlightCard(
-                    icon = Icons.Default.SystemUpdate,
-                    title = "Automated Release Checker",
-                    description = "Automatically checks GitHub for new releases and prompts you whenever an update drops."
+                    icon = Icons.Default.CheckCircle,
+                    title = "Bug Fixes & Improvements",
+                    description = stringResource(R.string.changelog_minor_fixes)
                 )
             }
 

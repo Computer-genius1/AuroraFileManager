@@ -66,7 +66,7 @@ fun MainScreen(viewModel: FileExplorerViewModel) {
     val updateInfo by viewModel.updateInfo.collectAsStateWithLifecycle()
     val isCheckingUpdates by viewModel.isCheckingUpdates.collectAsStateWithLifecycle()
 
-    val currentVersion = "1.0.3"
+    val currentVersion = "1.0.4"
 
     LaunchedEffect(Unit) {
         viewModel.checkForUpdates(currentVersion)
@@ -118,74 +118,81 @@ fun MainScreen(viewModel: FileExplorerViewModel) {
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                Spacer(Modifier.height(16.dp))
-                Text(
-                    "Aurora File Manager",
-                    modifier = Modifier.padding(16.dp),
-                    style = MaterialTheme.typography.titleLarge
-                )
-                HorizontalDivider()
-
-                // Storage summary
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(stringResource(R.string.storage), style = MaterialTheme.typography.labelMedium)
-                    Spacer(Modifier.height(4.dp))
-                    LinearProgressIndicator(
-                        progress = { storageInfo.third },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(8.dp),
-                    )
-                    Spacer(Modifier.height(4.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Spacer(Modifier.height(16.dp))
                     Text(
-                        text = "${FileItem.formatFileSize(storageInfo.second)} free of ${FileItem.formatFileSize(storageInfo.first)}",
-                        style = MaterialTheme.typography.bodySmall
+                        "Aurora File Manager",
+                        modifier = Modifier.padding(16.dp),
+                        style = MaterialTheme.typography.titleLarge
                     )
-                }
-                HorizontalDivider()
+                    HorizontalDivider()
 
-                Text(stringResource(R.string.quick_access), modifier = Modifier.padding(16.dp), style = MaterialTheme.typography.labelMedium)
-                viewModel.quickAccessFolders.forEach { (name, file) ->
+                    // Storage summary
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(stringResource(R.string.storage), style = MaterialTheme.typography.labelMedium)
+                        Spacer(Modifier.height(4.dp))
+                        LinearProgressIndicator(
+                            progress = { storageInfo.third },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(8.dp),
+                        )
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            text = "${FileItem.formatFileSize(storageInfo.second)} free of ${FileItem.formatFileSize(storageInfo.first)}",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                    HorizontalDivider()
+
+                    Text(stringResource(R.string.quick_access), modifier = Modifier.padding(16.dp), style = MaterialTheme.typography.labelMedium)
+                    viewModel.quickAccessFolders.forEach { (name, file) ->
+                        NavigationDrawerItem(
+                            icon = { Icon(getQuickAccessIcon(name), contentDescription = null) },
+                            label = { Text(name) },
+                            selected = currentDirectory == file,
+                            onClick = {
+                                viewModel.navigateTo(file)
+                                scope.launch { drawerState.close() }
+                            }
+                        )
+                    }
+
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                     NavigationDrawerItem(
-                        icon = { Icon(getQuickAccessIcon(name), contentDescription = null) },
-                        label = { Text(name) },
-                        selected = currentDirectory == file,
+                        icon = { Icon(Icons.Default.Visibility, contentDescription = null) },
+                        label = { Text(if (showHidden) stringResource(R.string.hide_hidden) else stringResource(R.string.show_hidden)) },
+                        selected = false,
+                        onClick = { viewModel.toggleShowHidden() }
+                    )
+                    NavigationDrawerItem(
+                        icon = { Icon(Icons.Default.Info, contentDescription = null) },
+                        label = { Text(stringResource(R.string.about_app)) },
+                        selected = false,
                         onClick = {
-                            viewModel.navigateTo(file)
+                            showAboutDialog = true
                             scope.launch { drawerState.close() }
                         }
                     )
-                }
-
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-                NavigationDrawerItem(
-                    icon = { Icon(Icons.Default.Visibility, contentDescription = null) },
-                    label = { Text(if (showHidden) stringResource(R.string.hide_hidden) else stringResource(R.string.show_hidden)) },
-                    selected = false,
-                    onClick = { viewModel.toggleShowHidden() }
-                )
-                NavigationDrawerItem(
-                    icon = { Icon(Icons.Default.Info, contentDescription = null) },
-                    label = { Text(stringResource(R.string.about_app)) },
-                    selected = false,
-                    onClick = {
-                        showAboutDialog = true
-                        scope.launch { drawerState.close() }
-                    }
-                )
-                NavigationDrawerItem(
-                    icon = { Icon(Icons.Default.SystemUpdate, contentDescription = null) },
-                    label = { Text(if (isCheckingUpdates) stringResource(R.string.checking_updates) else stringResource(R.string.check_for_updates)) },
-                    selected = false,
-                    onClick = {
-                        scope.launch { drawerState.close() }
-                        viewModel.checkForUpdates(currentVersion) { updateFound ->
-                            if (!updateFound) {
-                                scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.no_updates_found)) }
+                    NavigationDrawerItem(
+                        icon = { Icon(Icons.Default.SystemUpdate, contentDescription = null) },
+                        label = { Text(if (isCheckingUpdates) stringResource(R.string.checking_updates) else stringResource(R.string.check_for_updates)) },
+                        selected = false,
+                        onClick = {
+                            scope.launch { drawerState.close() }
+                            viewModel.checkForUpdates(currentVersion) { updateFound ->
+                                if (!updateFound) {
+                                    scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.no_updates_found)) }
+                                }
                             }
                         }
-                    }
-                )
+                    )
+                    Spacer(Modifier.height(16.dp))
+                }
             }
         }
     ) {
@@ -796,17 +803,18 @@ fun MainScreen(viewModel: FileExplorerViewModel) {
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text("• " + stringResource(R.string.changelog_samsung_fix), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+                    Text("• " + stringResource(R.string.changelog_drawer_fix), style = MaterialTheme.typography.bodyMedium)
                     Text("• " + stringResource(R.string.changelog_minor_fixes), style = MaterialTheme.typography.bodyMedium)
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text("• Welcome & Permission Onboarding Splash Screen", style = MaterialTheme.typography.bodyMedium)
-                    Text("• Complete Spanish Language Support", style = MaterialTheme.typography.bodyMedium)
-                    Text("• One-Tap Quick Access Folder Filter Chips", style = MaterialTheme.typography.bodyMedium)
-                    Text("• Select All & Live Multi-Selection Counter", style = MaterialTheme.typography.bodyMedium)
-                    Text("• Batch Copy, Cut, and Paste Operations", style = MaterialTheme.typography.bodyMedium)
-                    Text("• One-Tap Search Clear & Jetpack Compose BackHandler", style = MaterialTheme.typography.bodyMedium)
-                    Text("• StatFs Physical Storage Calculation Fix", style = MaterialTheme.typography.bodyMedium)
-                    Text("• Root Shell (su) Fallback Directory Engine", style = MaterialTheme.typography.bodyMedium)
-                    Text("• FileProvider Intent Chooser with MIME Detection", style = MaterialTheme.typography.bodyMedium)
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                    Text("• Welcome & Permission Onboarding Splash Screen", style = MaterialTheme.typography.bodySmall)
+                    Text("• Complete Spanish Language Support", style = MaterialTheme.typography.bodySmall)
+                    Text("• One-Tap Quick Access Folder Filter Chips", style = MaterialTheme.typography.bodySmall)
+                    Text("• Select All & Live Multi-Selection Counter", style = MaterialTheme.typography.bodySmall)
+                    Text("• Batch Copy, Cut, and Paste Operations", style = MaterialTheme.typography.bodySmall)
+                    Text("• One-Tap Search Clear & Jetpack Compose BackHandler", style = MaterialTheme.typography.bodySmall)
+                    Text("• StatFs Physical Storage Calculation Fix", style = MaterialTheme.typography.bodySmall)
+                    Text("• Root Shell (su) Fallback Directory Engine", style = MaterialTheme.typography.bodySmall)
+                    Text("• FileProvider Intent Chooser with MIME Detection", style = MaterialTheme.typography.bodySmall)
                 }
             },
             confirmButton = {

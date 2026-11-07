@@ -1,7 +1,7 @@
 # Aurora File Manager 📁
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
-[![Latest Release](https://img.shields.io/badge/Release-v1.0.3-brightgreen.svg)](https://github.com/Computer-genius1/AuroraFileManager/releases)
+[![Latest Release](https://img.shields.io/badge/Release-v1.0.4-brightgreen.svg)](https://github.com/Computer-genius1/AuroraFileManager/releases)
 [![Platform](https://img.shields.io/badge/Platform-Android_8.0+-orange.svg)](https://developer.android.com)
 [![Language](https://img.shields.io/badge/Language-Kotlin_100%25-purple.svg)](https://kotlinlang.org)
 

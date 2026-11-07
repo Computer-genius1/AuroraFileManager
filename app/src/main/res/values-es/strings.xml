@@ -43,7 +43,7 @@
     <string name="items_selected">%1$d seleccionados</string>
     <string name="clear_search">Borrar búsqueda</string>
     <string name="about_app">Acerca de y Notas de la Versión</string>
-    <string name="changelog_title">Notas de la Versión (v1.0.3)</string>
+    <string name="changelog_title">Notas de la Versión (v1.0.4)</string>
     <string name="check_for_updates">Buscar Actualizaciones</string>
     <string name="update_available">Actualización Disponible</string>
     <string name="download_update">Descargar Actualización</string>
@@ -55,9 +55,10 @@
     <string name="default_untitled_folder">Carpeta sin título</string>
     <string name="default_untitled_file">Archivo sin título.txt</string>
     <string name="update_complete_title">¡Actualización Completada!</string>
-    <string name="update_complete_subtitle">Bienvenido a Aurora 1.0.3. Novedades de esta versión:</string>
-    <string name="btn_explore">Explorar Versión 1.0.3</string>
+    <string name="update_complete_subtitle">Bienvenido a Aurora 1.0.4. Novedades fijadas en esta actualización:</string>
+    <string name="btn_explore">Explorar Versión 1.0.4</string>
     <string name="protected_android_folder_message">Protección: La carpeta del sistema Android es vital y no se puede eliminar.</string>
     <string name="changelog_samsung_fix">Corrige un problema que podría bloquear la instalación en ciertos dispositivos Samsung.</string>
+    <string name="changelog_drawer_fix">Menú lateral desplazable para un acceso instantáneo a Buscar Actualizaciones y Acerca de.</string>
     <string name="changelog_minor_fixes">Incluye otras correcciones de errores menores y mejoras de rendimiento.</string>
 </resources>

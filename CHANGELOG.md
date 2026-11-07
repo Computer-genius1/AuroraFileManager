@@ -2,9 +2,10 @@
 
 All notable changes to the Aurora File Manager project will be documented in this file.
 
-## [v1.0.3] - Aurora File Manager 1.0.3
+## [v1.0.4] - Aurora File Manager 1.0.4
 
 ### 📁 File Management & Usability
+- **Scrollable Navigation Drawer**: Added vertical scrolling to side navigation drawer so "Check for Updates" and "About & Release Notes" are always easily accessible on all screen sizes.
 - **Browse & Organize**: Copy, cut, paste, move, rename, and delete files/folders with batch selection support.
 - **Select All & Selection Counter**: Added a "Select All / Deselect All" toggle and live selection counter.
 - **Quick Access Chips**: One-tap navigation chips for Documents, Downloads, Pictures, Photos/DCIM, Videos, Music, and Internal Storage.
@@ -14,6 +15,7 @@ All notable changes to the Aurora File Manager project will be documented in thi
 
 ### 🛡️ Root Support & Safety Protection
 - **Protected `Android` Folder Guard**: Strict deletion protection preventing accidental deletion of the `/storage/emulated/0/Android` system directory.
+- **Samsung Installation & Compatibility**: Fixes installation issues on certain Samsung devices and ROMs.
 - **Root Browsing**: `su` shell execution for compatible rooted devices.
 - **Mount Point Discovery**: Enhanced storage volume discovery for internal storage, SD cards, and system directories.
 - **StatFs Storage Calculation**: Accurately measures physical hardware storage capacity and usable free space.
