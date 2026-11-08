@@ -22,7 +22,7 @@ class FileExplorerViewModel(application: Application) : AndroidViewModel(applica
 
     private val prefs = application.getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
 
-    private val currentVersionCode = 7
+    private val currentVersionCode = 10
 
     private val lastSeenVersionCode = prefs.getInt("last_seen_version_code", -1)
 
