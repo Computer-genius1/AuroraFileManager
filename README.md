@@ -2,17 +2,20 @@
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Latest Release](https://img.shields.io/badge/Release-v1.0.5-brightgreen.svg)](https://github.com/Computer-genius1/AuroraFileManager/releases)
-[![Platform](https://img.shields.io/badge/Platform-Android_%7C_iOS-orange.svg)](https://github.com/Computer-genius1/AuroraFileManager)
+[![Platform](https://img.shields.io/badge/Platform-Android_%7C_iOS_(Beta)-orange.svg)](https://github.com/Computer-genius1/AuroraFileManager)
 [![Languages](https://img.shields.io/badge/Languages-Kotlin_%7C_Swift-purple.svg)](https://github.com/Computer-genius1/AuroraFileManager)
 
-**Aurora File Manager** is a modern, transparent, and 100% open-source cross-platform file manager for **Android** and **iOS**. Built with **Jetpack Compose** (Android) and **SwiftUI** (iOS), Aurora provides full filesystem control without tracking, ads, or cloud data collection.
+**Aurora File Manager** is a modern, transparent, and 100% open-source cross-platform file manager for **Android** and **iOS (Beta)**. Built with **Jetpack Compose** (Android) and **SwiftUI** (iOS), Aurora provides full filesystem control without tracking, ads, or cloud data collection.
+
+> [!NOTE]  
+> **iOS Support Notice**: The iOS version of Aurora File Manager is currently in **Early Access Beta**.
 
 ---
 
 ## ✨ Features
 
 ### 📁 File Management & Usability
-- **Cross-Platform Support**: Native experience optimized for both **Android** and **iOS** devices.
+- **Cross-Platform Support**: Native experience optimized for **Android** (Stable) and **iOS** (Beta).
 - **Complete File Operations**: Browse, copy, cut, paste, move, rename, and delete files and folders.
 - **Batch Clipboard & Multi-Selection**: Select multiple items with live item counter and one-tap **Select All / Deselect All** controls.
 - **Quick Access Filter Chips Row**: One-tap access to Documents, Downloads, Pictures, Photos/DCIM, Videos, Music, and Internal Storage directly below path breadcrumbs.
@@ -47,11 +50,11 @@ Aurora File Manager is committed to 100% privacy and transparency:
 
 ### Prerequisites
 - **Android**: Android Studio Ladybug or newer, JDK 17/21, Android SDK 35/37
-- **iOS**: macOS, Xcode 15+, iOS 16+ SDK
+- **iOS (Beta)**: macOS, Xcode 15+, iOS 16+ SDK
 
 ### Build Commands
 
-#### Android (Kotlin & Jetpack Compose):
+#### Android (Kotlin & Jetpack Compose - Stable):
 ```bash
 git clone https://github.com/Computer-genius1/AuroraFileManager.git
 cd AuroraFileManager
@@ -64,7 +67,7 @@ cd AuroraFileManager
 ```
 The compiled Android APK is output to `app/build/outputs/apk/release/app-release.apk`.
 
-#### iOS (Swift & SwiftUI):
+#### iOS (Swift & SwiftUI - Beta):
 Open the iOS project folder in **Xcode** and build for simulator or device:
 ```bash
 xcodebuild -scheme AuroraFileManager -configuration Release
