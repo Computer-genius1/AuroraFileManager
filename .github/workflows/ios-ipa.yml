@@ -1,0 +1,61 @@
+name: Build Aurora iOS IPA
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "ios-v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        working-directory: ios
+        run: xcodegen generate
+
+      - name: Build unsigned iOS app
+        working-directory: ios
+        run: |
+          xcodebuild \
+            -project AuroraFileManager.xcodeproj \
+            -scheme AuroraFileManager \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath ../build \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Package unsigned IPA
+        run: |
+          APP_PATH="build/Build/Products/Release-iphoneos/AuroraFileManager.app"
+          test -d "$APP_PATH"
+          mkdir -p package/Payload
+          cp -R "$APP_PATH" package/Payload/
+          cd package
+          zip -qry ../AuroraFileManager-iOS-unsigned.ipa Payload
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AuroraFileManager-iOS-unsigned-IPA
+          path: AuroraFileManager-iOS-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish IPA to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/ios-v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Aurora File Manager iOS ${{ github.ref_name }}
+          generate_release_notes: true
+          files: AuroraFileManager-iOS-unsigned.ipa
