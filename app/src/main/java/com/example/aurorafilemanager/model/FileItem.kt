@@ -39,3 +39,7 @@ enum class SortOrder {
 enum class ViewMode {
     LIST, GRID
 }
+
+enum class ThemeMode {
+    SYSTEM, LIGHT, DARK
+}

@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Aurora File Manager</string>
     <string name="welcome_title">Welcome to Aurora</string>
-    <string name="welcome_subtitle">Transparent &amp; Open Source File Management</string>
+    <string name="welcome_subtitle">Transparent &amp; Open Source File Management for Android &amp; iOS</string>
     <string name="privacy_badge_title">100% Private &amp; Open Source</string>
     <string name="privacy_badge_desc">Zero data collection, no analytics, and no cloud uploads.</string>
     <string name="permissions_required">Permissions Required</string>
@@ -62,4 +62,9 @@
     <string name="changelog_drawer_fix">Scrollable side navigation drawer for instant access to Check for Updates and About.</string>
     <string name="changelog_minor_fixes">Includes other minor bug fixes and improvements.</string>
     <string name="error_checking_updates">Could not check for updates. Check your connection.</string>
+    <string name="settings">Settings</string>
+    <string name="theme_mode">Theme Mode</string>
+    <string name="theme_system">System Default</string>
+    <string name="theme_light">Light Theme</string>
+    <string name="theme_dark">Dark Theme</string>
 </resources>

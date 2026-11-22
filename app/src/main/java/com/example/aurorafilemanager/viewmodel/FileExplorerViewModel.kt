@@ -9,6 +9,7 @@ import com.example.aurorafilemanager.data.UpdateChecker
 import com.example.aurorafilemanager.model.FileItem
 import com.example.aurorafilemanager.model.SortBy
 import com.example.aurorafilemanager.model.SortOrder
+import com.example.aurorafilemanager.model.ThemeMode
 import com.example.aurorafilemanager.model.ViewMode
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -45,6 +46,17 @@ class FileExplorerViewModel(application: Application) : AndroidViewModel(applica
             .putInt("last_seen_version_code", currentVersionCode)
             .apply()
         _hasSeenOnboarding.value = true
+    }
+
+    private val savedTheme = prefs.getString("theme_mode", ThemeMode.SYSTEM.name) ?: ThemeMode.SYSTEM.name
+    private val _themeMode = MutableStateFlow(
+        try { ThemeMode.valueOf(savedTheme) } catch (_: Exception) { ThemeMode.SYSTEM }
+    )
+    val themeMode: StateFlow<ThemeMode> = _themeMode
+
+    fun setThemeMode(mode: ThemeMode) {
+        prefs.edit().putString("theme_mode", mode.name).apply()
+        _themeMode.value = mode
     }
 
     private val _updateInfo = MutableStateFlow<AppUpdateInfo?>(null)

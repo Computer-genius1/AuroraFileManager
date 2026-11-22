@@ -24,59 +24,67 @@ object FileManager {
     }
 
     fun getQuickAccessFolders(): List<Pair<String, File>> {
-        val externalDir = rootStorage
-        val defaultFolders = mutableListOf(
-            "Root Directory" to File("/"),
-            "Internal Storage" to externalDir
-        )
+        return try {
+            val externalDir = rootStorage
+            val defaultFolders = mutableListOf(
+                "Root Directory" to File("/"),
+                "Internal Storage" to externalDir
+            )
 
-        val targetFolders = listOf(
-            "Documents" to try { Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) } catch (_: Exception) { File(externalDir, "Documents") },
-            "Downloads" to try { Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) } catch (_: Exception) { File(externalDir, "Download") },
-            "Pictures" to try { Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) } catch (_: Exception) { File(externalDir, "Pictures") },
-            "Photos / DCIM" to try { Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) } catch (_: Exception) { File(externalDir, "DCIM") },
-            "Videos" to try { Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES) } catch (_: Exception) { File(externalDir, "Movies") },
-            "Music" to try { Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC) } catch (_: Exception) { File(externalDir, "Music") }
-        )
+            val targetFolders = listOf(
+                "Documents" to try { Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) } catch (_: Exception) { File(externalDir, "Documents") },
+                "Downloads" to try { Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) } catch (_: Exception) { File(externalDir, "Download") },
+                "Pictures" to try { Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) } catch (_: Exception) { File(externalDir, "Pictures") },
+                "Photos / DCIM" to try { Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) } catch (_: Exception) { File(externalDir, "DCIM") },
+                "Videos" to try { Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES) } catch (_: Exception) { File(externalDir, "Movies") },
+                "Music" to try { Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC) } catch (_: Exception) { File(externalDir, "Music") }
+            )
 
-        for ((name, dir) in targetFolders) {
-            val validDir = if (dir != null && dir.exists()) {
-                dir
-            } else {
-                val fallback = when (name) {
-                    "Documents" -> File(externalDir, "Documents")
-                    "Downloads" -> File(externalDir, "Download")
-                    "Pictures" -> File(externalDir, "Pictures")
-                    "Photos / DCIM" -> File(externalDir, "DCIM")
-                    "Videos" -> File(externalDir, "Movies")
-                    "Music" -> File(externalDir, "Music")
-                    else -> File(externalDir, name)
+            for ((name, dir) in targetFolders) {
+                val validDir = if (dir != null && dir.exists()) {
+                    dir
+                } else {
+                    val fallback = when (name) {
+                        "Documents" -> File(externalDir, "Documents")
+                        "Downloads" -> File(externalDir, "Download")
+                        "Pictures" -> File(externalDir, "Pictures")
+                        "Photos / DCIM" -> File(externalDir, "DCIM")
+                        "Videos" -> File(externalDir, "Movies")
+                        "Music" -> File(externalDir, "Music")
+                        else -> File(externalDir, name)
+                    }
+                    if (!fallback.exists()) {
+                        try { fallback.mkdirs() } catch (_: Exception) {}
+                    }
+                    fallback
                 }
-                if (!fallback.exists()) {
-                    try { fallback.mkdirs() } catch (_: Exception) {}
+                if (validDir.exists()) {
+                    defaultFolders.add(name to validDir)
                 }
-                fallback
             }
-            if (validDir.exists()) {
-                defaultFolders.add(name to validDir)
-            }
-        }
 
-        // Automatically discover physical SD cards and USB OTG storage mounted in /storage
-        try {
-            val storageMounts = File("/storage")
-            if (storageMounts.exists()) {
-                storageMounts.listFiles()?.forEach { mount ->
-                    if ((mount.isDirectory || !mount.isFile) && mount.name != "emulated" && mount.name != "self") {
-                        defaultFolders.add("SD Card / Storage (${mount.name})" to mount)
+            // Automatically discover physical SD cards and USB OTG storage mounted in /storage
+            try {
+                val storageMounts = File("/storage")
+                if (storageMounts.exists()) {
+                    storageMounts.listFiles()?.forEach { mount ->
+                        if ((mount.isDirectory || !mount.isFile) && mount.name != "emulated" && mount.name != "self") {
+                            defaultFolders.add("SD Card / Storage (${mount.name})" to mount)
+                        }
                     }
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
 
-        return defaultFolders
+            defaultFolders
+        } catch (t: Throwable) {
+            t.printStackTrace()
+            listOf(
+                "Root Directory" to File("/"),
+                "Internal Storage" to File("/storage/emulated/0")
+            )
+        }
     }
 
     fun isSystemFile(file: File): Boolean {

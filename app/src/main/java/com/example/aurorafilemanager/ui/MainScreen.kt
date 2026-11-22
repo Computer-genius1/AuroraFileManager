@@ -7,6 +7,7 @@ import android.os.Environment
 import android.provider.Settings
 import android.webkit.MimeTypeMap
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -83,6 +84,7 @@ fun MainScreen(viewModel: FileExplorerViewModel) {
     var showSystemDeleteWarning by remember { mutableStateOf(false) }
     var understoodRisk by remember { mutableStateOf(false) }
     var showAboutDialog by remember { mutableStateOf(false) }
+    var showSettingsDialog by remember { mutableStateOf(false) }
 
     var showSortMenu by remember { mutableStateOf(false) }
     var isSearchActive by remember { mutableStateOf(false) }
@@ -175,6 +177,15 @@ fun MainScreen(viewModel: FileExplorerViewModel) {
                         selected = false,
                         onClick = {
                             showAboutDialog = true
+                            scope.launch { drawerState.close() }
+                        }
+                    )
+                    NavigationDrawerItem(
+                        icon = { Icon(Icons.Default.Settings, contentDescription = null) },
+                        label = { Text(stringResource(R.string.settings)) },
+                        selected = false,
+                        onClick = {
+                            showSettingsDialog = true
                             scope.launch { drawerState.close() }
                         }
                     )
@@ -819,6 +830,57 @@ fun MainScreen(viewModel: FileExplorerViewModel) {
             },
             confirmButton = {
                 TextButton(onClick = { showAboutDialog = false }) {
+                    Text(stringResource(R.string.close))
+                }
+            }
+        )
+    }
+
+    if (showSettingsDialog) {
+        val themeMode by viewModel.themeMode.collectAsStateWithLifecycle()
+        AlertDialog(
+            onDismissRequest = { showSettingsDialog = false },
+            title = { Text(stringResource(R.string.settings)) },
+            text = {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = stringResource(R.string.theme_mode),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    val options = listOf(
+                        com.example.aurorafilemanager.model.ThemeMode.SYSTEM to stringResource(R.string.theme_system),
+                        com.example.aurorafilemanager.model.ThemeMode.LIGHT to stringResource(R.string.theme_light),
+                        com.example.aurorafilemanager.model.ThemeMode.DARK to stringResource(R.string.theme_dark)
+                    )
+
+                    options.forEach { (mode, label) ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { viewModel.setThemeMode(mode) }
+                                .padding(vertical = 8.dp)
+                        ) {
+                            RadioButton(
+                                selected = (themeMode == mode),
+                                onClick = { viewModel.setThemeMode(mode) }
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = label,
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showSettingsDialog = false }) {
                     Text(stringResource(R.string.close))
                 }
             }
