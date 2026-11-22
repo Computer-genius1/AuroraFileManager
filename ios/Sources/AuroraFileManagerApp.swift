@@ -72,6 +72,8 @@ struct BrowserView: View {
     @State private var alertMessage: String?
     @State private var showAlert = false
 
+    private var rootDirectory: URL { FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0] }
+
     private var visibleEntries: [FileEntry] {
         entries.filter { filter.matches($0) }
             .filter { searchText.isEmpty || $0.name.localizedCaseInsensitiveContains(searchText) }
@@ -90,7 +92,7 @@ struct BrowserView: View {
                 List {
                     if visibleEntries.isEmpty {
                         VStack(spacing: 10) {
-                            Image(systemName: "folder",).font(.system(size: 38)).foregroundColor(.secondary)
+                            Image(systemName: "folder").font(.system(size: 38)).foregroundColor(.secondary)
                             Text(searchText.isEmpty ? "This folder is empty" : "No matching files")
                                 .foregroundColor(.secondary)
                         }
@@ -151,7 +153,16 @@ struct BrowserView: View {
     }
 
     private var headerPath: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 8) {
+            if currentDirectory.standardizedFileURL != rootDirectory.standardizedFileURL {
+                Button {
+                    currentDirectory.deleteLastPathComponent()
+                    searchText = ""
+                    refresh()
+                } label: {
+                    Image(systemName: "chevron.left").font(.caption.weight(.semibold))
+                }
+            }
             Image(systemName: "lock.shield").foregroundColor(.green)
             Text("On My iPhone • Aurora Documents")
                 .font(.caption)
@@ -232,7 +243,7 @@ struct BrowserView: View {
                     Image(systemName: selection.contains(entry.id) ? "checkmark.circle.fill" : "circle")
                         .foregroundColor(selection.contains(entry.id) ? .accentColor : .secondary)
                 } else if entry.isDirectory {
-                    Image(systemName: "chevron.right").font(.caption).foregroundColor(.tertiary)
+                    Image(systemName: "chevron.right").font(.caption).foregroundColor(.secondary)
                 } else {
                     Image(systemName: "square.and.arrow.up").font(.caption).foregroundColor(.secondary)
                 }
