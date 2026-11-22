@@ -1,5 +1,6 @@
 import SwiftUI
 import UniformTypeIdentifiers
+import UIKit
 
 @main
 struct AuroraFileManagerApp: App {
@@ -34,7 +35,7 @@ private enum QuickFilter: String, CaseIterable, Identifiable {
         switch self {
         case .all: return true
         case .documents: return ["pdf", "txt", "rtf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "pages", "numbers", "key"].contains(ext)
-        case .downloads: return true
+        case .downloads: return entry.url.pathComponents.contains { $0.localizedCaseInsensitiveCompare("Downloads") == .orderedSame }
         case .photos: return ["jpg", "jpeg", "png", "heic", "gif", "tiff", "webp"].contains(ext)
         case .videos: return ["mp4", "mov", "m4v", "avi", "mkv"].contains(ext)
         case .music: return ["mp3", "m4a", "aac", "wav", "aiff", "flac"].contains(ext)
@@ -118,6 +119,7 @@ struct BrowserView: View {
                         Button { showingImporter = true } label: { Label("Import Files", systemImage: "square.and.arrow.down") }
                         Button { showingNewFolder = true; nameInput = "" } label: { Label("New Folder", systemImage: "folder.badge.plus") }
                         Button { showingNewFile = true; nameInput = "" } label: { Label("New Text File", systemImage: "doc.badge.plus") }
+                        Button { pasteClipboard() } label: { Label(clipboardIsCut ? "Move Here" : "Paste", systemImage: "doc.on.clipboard") }.disabled(clipboard.isEmpty)
                         Button { refresh() } label: { Label("Refresh", systemImage: "arrow.clockwise") }
                     } label: {
                         Image(systemName: "plus")
@@ -270,6 +272,7 @@ struct BrowserView: View {
                         continue
                     }
                     try FileManager.default.copyItem(at: url, to: destination)
+                    try protectRecursively(destination)
                 } catch {
                     report("Import failed: \(error.localizedDescription)")
                 }
@@ -281,16 +284,19 @@ struct BrowserView: View {
     }
 
     private func createFolder() {
-        guard validName(nameInput) else { report("Enter a valid folder name."); return }
+        let folderName = nameInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Untitled Folder" : nameInput.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard validName(folderName) else { report("Enter a valid folder name."); return }
         do {
-            try FileManager.default.createDirectory(at: currentDirectory.appendingPathComponent(nameInput), withIntermediateDirectories: false)
+            let folderURL = currentDirectory.appendingPathComponent(folderName)
+            try FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: false)
+            try protectRecursively(folderURL)
             refresh()
         } catch { report(error.localizedDescription) }
     }
 
     private func createTextFile() {
         var filename = nameInput.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !filename.isEmpty else { filename = "Untitled File.txt"; nameInput = filename; return }
+        if filename.isEmpty { filename = "Untitled File.txt" }
         if URL(fileURLWithPath: filename).pathExtension.isEmpty { filename += ".txt" }
         do {
             let url = currentDirectory.appendingPathComponent(filename)
@@ -345,6 +351,14 @@ struct BrowserView: View {
             catch { report(error.localizedDescription) }
         })
         UIApplication.shared.topViewController?.present(alert, animated: true)
+    }
+
+    private func protectRecursively(_ url: URL) throws {
+        try FileManager.default.setAttributes([.protectionKey: FileProtectionType.complete], ofItemAtPath: url.path)
+        var isDirectory: ObjCBool = false
+        guard FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory), isDirectory.boolValue else { return }
+        let children = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil)
+        for child in children { try protectRecursively(child) }
     }
 
     private func validName(_ name: String) -> Bool {
