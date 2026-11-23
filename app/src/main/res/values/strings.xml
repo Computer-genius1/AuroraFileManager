@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Aurora File Manager</string>
     <string name="welcome_title">Welcome to Aurora</string>
-    <string name="welcome_subtitle">Transparent &amp; Open Source File Management for Android &amp; iOS</string>
+    <string name="welcome_subtitle">Transparent &amp; Open Source File Management for Android, iOS &amp; Windows 11</string>
     <string name="privacy_badge_title">100% Private &amp; Open Source</string>
     <string name="privacy_badge_desc">Zero data collection, no analytics, and no cloud uploads.</string>
     <string name="permissions_required">Permissions Required</string>

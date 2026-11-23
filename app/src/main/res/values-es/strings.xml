@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Gestor de Archivos Aurora</string>
     <string name="welcome_title">Bienvenido a Aurora</string>
-    <string name="welcome_subtitle">Gestión de archivos transparente y de código abierto para Android e iOS</string>
+    <string name="welcome_subtitle">Gestión de archivos transparente y de código abierto para Android, iOS y Windows 11</string>
     <string name="privacy_badge_title">100% Privado y de Código Abierto</string>
     <string name="privacy_badge_desc">Sin recopilación de datos, sin analíticas y sin subidas a la nube.</string>
     <string name="permissions_required">Permisos Requeridos</string>
