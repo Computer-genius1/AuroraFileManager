@@ -109,8 +109,19 @@ public partial class MainWindow : Window
         if (PlacesList.SelectedItem is not ListBoxItem item || item.Tag is not string tag) return;
         if (tag == "DRIVES") { Navigate(Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.System)) ?? "C:\\"); return; }
         if (tag == "HOME") { Navigate(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)); return; }
-        var folder = Environment.GetFolderPath(Enum.Parse<Environment.SpecialFolder>(tag));
+        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        var folder = tag switch
+        {
+            "Desktop" => Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+            "MyDocuments" => Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            "Downloads" => Path.Combine(home, "Downloads"),
+            "MyPictures" => Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
+            "MyMusic" => Environment.GetFolderPath(Environment.SpecialFolder.MyMusic),
+            "MyVideos" => Environment.GetFolderPath(Environment.SpecialFolder.MyVideos),
+            _ => home
+        };
         if (Directory.Exists(folder)) Navigate(folder);
+        else StatusText.Text = $"The {item.Content} folder is not present on this PC.";
     }
     private void FilesList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
