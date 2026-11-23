@@ -1,7 +1,7 @@
 #ifndef AppArch
   #define AppArch "x64"
 #endif
-#define AppVersion "0.1.0"
+#define AppVersion "1.5.0"
 #define AppName "Aurora File Manager"
 [Setup]
 AppId={{9B3B1B0A-3D5A-4B12-9A9A-3E2A2A5A0B71}
@@ -11,7 +11,7 @@ AppPublisher=Aurora File Manager
 DefaultDirName={autopf}\Aurora File Manager
 DefaultGroupName=Aurora File Manager
 OutputDir=..\..\dist\installers
-OutputBaseFilename=Aurora-File-Manager-Windows-{#AppArch}-Beta-0.1.0-Setup
+OutputBaseFilename=Aurora-File-Manager-Windows-{#AppArch}-Beta-1.5.0-Setup
 #if AppArch == "x64"
 ArchitecturesAllowed=x64compatible and not arm64
 #else
