@@ -1,8 +1,6 @@
-name: Build Aurora iOS IPA
+name: Build Aurora iOS Beta IPA
 
 on:
-  workflow_dispatch:
-  pull_request:
   push:
     branches:
       - "ios-port"
@@ -14,10 +12,15 @@ permissions:
 
 jobs:
   build:
-    runs-on: macos-14
+    name: Build first iOS beta IPA
+    runs-on: macos-latest
+    timeout-minutes: 30
     steps:
       - name: Check out source
         uses: actions/checkout@v4
+
+      - name: Select available Xcode
+        run: xcodebuild -version
 
       - name: Install XcodeGen
         run: brew install xcodegen
@@ -45,20 +48,20 @@ jobs:
           mkdir -p package/Payload
           cp -R "$APP_PATH" package/Payload/
           cd package
-          zip -qry ../AuroraFileManager-iOS-unsigned.ipa Payload
+          zip -qry ../AuroraFileManager-iOS-Beta-0.1-unsigned.ipa Payload
 
-      - name: Upload IPA artifact
+      - name: Upload beta IPA artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AuroraFileManager-iOS-unsigned-IPA
-          path: AuroraFileManager-iOS-unsigned.ipa
+          name: Aurora-iOS-Beta-0.1-unsigned-IPA
+          path: AuroraFileManager-iOS-Beta-0.1-unsigned.ipa
           if-no-files-found: error
           retention-days: 30
 
-      - name: Publish IPA to GitHub Release
+      - name: Publish beta IPA to GitHub Release
         if: startsWith(github.ref, 'refs/tags/ios-v')
         uses: softprops/action-gh-release@v2
         with:
-          name: Aurora File Manager iOS ${{ github.ref_name }}
+          name: Aurora File Manager iOS Beta ${{ github.ref_name }}
           generate_release_notes: true
-          files: AuroraFileManager-iOS-unsigned.ipa
+          files: AuroraFileManager-iOS-Beta-0.1-unsigned.ipa
