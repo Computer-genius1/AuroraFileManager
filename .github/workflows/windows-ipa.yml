@@ -1,0 +1,60 @@
+name: Build Aurora Windows Beta Installers
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "windows-port"
+    tags:
+      - "windows-v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Windows ${{ matrix.label }} installer
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - rid: win-x64
+            arch: x64
+            label: x86-64
+          - rid: win-arm64
+            arch: arm64
+            label: ARM64
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Publish self-contained single-file app
+        run: dotnet publish windows/AuroraFileManager/AuroraFileManager.csproj -c Release -r ${{ matrix.rid }} --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -o dist/${{ matrix.arch }}
+
+      - name: Install Inno Setup
+        run: choco install innosetup --yes --no-progress
+
+      - name: Build EXE installer
+        run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /DAppArch=${{ matrix.arch }} windows/installer/Aurora.iss'
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: Aurora-Windows-Beta-0.1.0-${{ matrix.arch }}
+          path: dist/installers/Aurora-File-Manager-Windows-${{ matrix.arch }}-Beta-0.1.0-Setup.exe
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish installer to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/windows-v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Aurora File Manager Windows Beta ${{ github.ref_name }}
+          generate_release_notes: true
+          files: dist/installers/Aurora-File-Manager-Windows-${{ matrix.arch }}-Beta-0.1.0-Setup.exe
