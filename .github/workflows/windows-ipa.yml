@@ -1,4 +1,4 @@
-name: Build Aurora Windows Beta Installers
+name: Build Aurora Windows 1.5 Beta Installers
 
 on:
   workflow_dispatch:
@@ -46,8 +46,8 @@ jobs:
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
-          name: Aurora-Windows-Beta-0.1.0-${{ matrix.arch }}
-          path: dist/installers/Aurora-File-Manager-Windows-${{ matrix.arch }}-Beta-0.1.0-Setup.exe
+          name: Aurora-Windows-1.5-Beta-${{ matrix.arch }}
+          path: dist/installers/Aurora-File-Manager-Windows-${{ matrix.arch }}-Beta-1.5.0-Setup.exe
           if-no-files-found: error
           retention-days: 30
 
