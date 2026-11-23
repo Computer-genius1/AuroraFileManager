@@ -12,9 +12,12 @@ DefaultDirName={autopf}\Aurora File Manager
 DefaultGroupName=Aurora File Manager
 OutputDir=..\dist\installers
 OutputBaseFilename=Aurora-File-Manager-Windows-{#AppArch}-Beta-0.1.0-Setup
-ArchitecturesAllowed={#AppArch}
-ArchitecturesInstallIn64BitMode={#AppArch}
-PrivilegesRequired=admin
+#if AppArch == "x64"
+ArchitecturesAllowed=x64compatible and not arm64
+#else
+ArchitecturesAllowed=arm64
+#endif
+PrivilegesRequired=lowest
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
