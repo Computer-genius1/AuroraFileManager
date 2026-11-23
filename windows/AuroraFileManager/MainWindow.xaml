@@ -46,7 +46,9 @@
       </StackPanel>
      </DockPanel>
      <ListView x:Name="FilesList" SelectionMode="Extended" MouseDoubleClick="FilesList_MouseDoubleClick"
-       KeyDown="FilesList_KeyDown" BorderThickness="0">
+       KeyDown="FilesList_KeyDown" BorderThickness="0"
+       ScrollViewer.CanContentScroll="True" VirtualizingPanel.IsVirtualizing="True"
+       VirtualizingPanel.VirtualizationMode="Recycling">
       <ListView.View>
        <GridView>
         <GridViewColumn Header="Name" Width="390" DisplayMemberBinding="{Binding Name}"/>
