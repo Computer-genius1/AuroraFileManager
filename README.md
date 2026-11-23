@@ -78,6 +78,20 @@ xcodegen generate
 xcodebuild -project AuroraFileManager.xcodeproj -scheme AuroraFileManager -configuration Release -sdk iphoneos CODE_SIGNING_ALLOWED=NO build
 ```
 
+#### Installing the iOS Beta (without building from source)
+
+You don't need to open Xcode to try Aurora on a compatible iPhone or iPad. You can install the iOS beta using a sideloading tool:
+
+1. Download the **unsigned iOS beta IPA** from the iOS GitHub Actions build artifact or from an iOS beta GitHub Release when one is published.
+2. Choose a sideloading tool:
+   - **[Sideloadly](https://sideloadly.io/)** — install the IPA from a Mac or Windows PC.
+   - **[AltStore](https://altstore.io/)** — install and manage the IPA using AltStore.
+   - **[SideStore](https://sidestore.io/)** — an alternative iOS sideloading option.
+3. Follow the selected tool's instructions to sign the IPA with your Apple account and install it on your device.
+4. If iOS asks you to trust the developer profile, follow Apple's on-device trust instructions before opening the app.
+
+**Important:** The beta IPA is distributed unsigned. It must be signed during installation by your chosen sideloading tool; simply downloading or tapping the IPA will not install it. Sideloading may require a computer for initial setup, and free Apple account signing can have provisioning and refresh limitations. Only install builds you trust.
+
 #### Windows 10/11 (C#, WPF & XAML - Beta):
 Build self-contained applications for each architecture with the .NET 8 SDK:
 ```powershell
