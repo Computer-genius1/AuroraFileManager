@@ -1,6 +1,7 @@
 name: Build Aurora iOS Beta IPA
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - "ios-port"
